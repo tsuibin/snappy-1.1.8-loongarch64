@@ -15,3 +15,9 @@ Doris 的 `util/block_compression.cpp` 用 `#include <snappy/snappy-sinksource.h
     cp snappy.h snappy-sinksource.h snappy-c.h $PREFIX/include/snappy/
 
 （Arrow 的 `Snappy_SOURCE=SYSTEM` 也靠这个路径找。）
+
+## 更新（2026-11-04）
+
+头文件放进 `include/snappy/` 的做法在最终 BE 编译中确认有效（`util/block_compression.cpp` 通过）。
+brpc 也引用全局命名空间的 `snappy::GetUncompressedLength`，链接行须给 `-lsnappy`；最终 0 undefined symbol。
+Arrow 的 Parquet snappy codec 实测压到 52%，未静默降级。
